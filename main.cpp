@@ -1,7 +1,8 @@
-
-
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #include <iostream>
 #include <fstream>
@@ -65,7 +66,7 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
-class HelloTriangleApplication {
+class survivalGame {
 public:
     void run() {
         initWindow();
@@ -120,7 +121,7 @@ private:
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-        auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
+        auto app = reinterpret_cast<survivalGame*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }
 
@@ -139,6 +140,31 @@ private:
         createCommandBuffers();
         createSyncObjects();
     }
+
+    /*
+    void createTextureImage() {
+        int texWidth, texHeight, texChannels;
+        stbi_uc* pixels = stbi_load("textures/background.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+        if (!pixels) {
+            throw std::runtime_error("failed to load texture image!");
+        }
+
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+
+        createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+        void* data;
+        vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
+            memcpy(data, pixels, static_cast<size_t>(imageSize));
+        vkUnmapMemory(device, stagingBufferMemory);
+
+        stbi_image_free(pixels);
+
+    }
+     */
 
     void mainLoop() {
         while (!glfwWindowShouldClose(window)) {
@@ -462,8 +488,8 @@ private:
     }
 
     void createGraphicsPipeline() {
-        auto vertShaderCode = readFile("vertex.spv");
-        auto fragShaderCode = readFile("fragment.spv");
+        auto vertShaderCode = readFile("C:/Users/mamac/Documents/Programmation/C++/survivalgamevulkan/res/shaders/vertex.spv");
+        auto fragShaderCode = readFile("C:/Users/mamac/Documents/Programmation/C++/survivalgamevulkan/res/shaders/frag.spv");
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -944,7 +970,7 @@ private:
 };
 
 int main() {
-    HelloTriangleApplication app;
+    survivalGame app;
 
     try {
         app.run();
